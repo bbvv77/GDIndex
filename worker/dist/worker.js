@@ -540,6 +540,15 @@ self.props = {
   }
 
   async function onPut(request) {
+    if (!self.props.upload) {
+      return new Response("Upload isn't enabled.", {
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        status: 405
+      });
+    }
+
     let {
       pathname: path
     } = request;
@@ -691,7 +700,7 @@ ${fileht}
   addEventListener('fetch', event => {
     event.respondWith(handleRequest(event.request).catch(err => {
       console.error(err);
-      new Response(JSON.stringify(err.stack), {
+      return new Response(JSON.stringify(err.stack), {
         status: 500,
         headers: {
           'Content-Type': 'application/json'
